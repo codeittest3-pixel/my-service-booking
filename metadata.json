@@ -1,0 +1,8 @@
+{
+  "name": "회의실·비품 예약 서비스",
+  "description": "회의실과 공용 비품의 예약 현황을 실시간으로 확인하고 중복 없이 간편하게 예약하는 임직원 자산 예약 포털\n회의실·비품 예약 서비스 - 토픽5 챕터3 레슨2에 사용",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
