@@ -91,14 +91,14 @@ export default function DashboardView({
   return (
     <div className="space-y-8 pb-12 animate-fade-in mt-16 max-w-[1200px] w-full mx-auto p-6">
       {/* 2026 Today Indicator Strip */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <div className="bg-transparent border border-gray-200 text-gray-900 p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
-          <h3 className="font-bold text-sm tracking-wide uppercase opacity-90">Company Notice</h3>
-          <p className="text-xs mt-0.5 font-medium opacity-80">
+          <h3 className="font-bold text-sm tracking-wide uppercase text-blue-600">Company Notice</h3>
+          <p className="text-xs mt-0.5 font-medium text-gray-600">
             총무팀 안내: 반납 마감 시간을 꼭 준수해 주시고 사용 후 지정된 장소나 충전함에 보관해 주세요.
           </p>
         </div>
-        <div className="px-3 py-1 bg-white/20 rounded-full text-xs font-semibold self-start sm:self-auto select-none">
+        <div className="px-3 py-1 bg-gray-100 text-gray-700 border border-gray-200 rounded-full text-[11px] font-semibold self-start sm:self-auto select-none">
           기준일 및 시간: 2026-05-26 07:37 UTC
         </div>
       </div>
