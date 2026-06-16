@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { onAuthStateChanged, signInAnonymously } from 'firebase/auth';
-import { auth } from './firebase';
 import { ViewState, Resource, Reservation } from './types';
 import { mockResources } from './data';
 import { checkCollision } from './utils';
@@ -25,40 +23,18 @@ import EditView from './components/EditView';
 export default function App() {
   const [currentView, setCurrentView] = useState<ViewState>('dashboard');
   const [resources] = useState<Resource[]>(mockResources);
-  const [authReady, setAuthReady] = useState(false);
 
   // Load and persist reservations in real-time from Firebase Firestore
   const [reservations, setReservations] = useState<Reservation[]>([]);
 
   useEffect(() => {
-    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
-      console.log("Auth state changed:", user ? `User: ${user.uid}` : "No user");
-      
-      if (!user) {
-        try {
-          console.log("Attempting anonymous sign in...");
-          await signInAnonymously(auth);
-          // onAuthStateChanged will fire again with the new user
-        } catch (error) {
-          console.error("Anonymous sign-in failed:", error);
-          setAuthReady(true); // Proceed anyway to show errors
-        }
-      } else {
-        setAuthReady(true);
-      }
-    });
-    return () => unsubscribeAuth();
-  }, []);
-
-  useEffect(() => {
-    if (!authReady) return;
     const unsubscribe = subscribeReservations((updatedList) => {
       setReservations(updatedList);
     }, (error) => {
       console.error("Failed to subscribe reservations:", error);
     });
     return () => unsubscribe();
-  }, [authReady]);
+  }, []);
 
   // Global search term
   const [searchTerm, setSearchTerm] = useState<string>('');

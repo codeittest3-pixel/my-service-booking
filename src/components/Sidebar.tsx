@@ -39,7 +39,7 @@ export default function Sidebar({ currentView, onNavigate, onOpenNewBooking }: S
         <button
           onClick={onOpenNewBooking}
           id="sidebar-new-booking-btn"
-          className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95 duration-150 cursor-pointer"
+          className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xl rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95 duration-150 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           새 예약하기
