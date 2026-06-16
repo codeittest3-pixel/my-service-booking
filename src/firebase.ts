@@ -5,8 +5,8 @@ import firebaseConfig from '../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
 
-// CRITICAL: The app will break without firestoreDatabaseId passed to getFirestore
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+// Ensure consistent database access
+export const db = getFirestore(app);
 export const auth = getAuth();
 
 export enum OperationType {
