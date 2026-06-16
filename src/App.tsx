@@ -25,11 +25,19 @@ export default function App() {
   const [resources] = useState<Resource[]>(mockResources);
 
   // Load and persist reservations in real-time from Firebase Firestore
-  const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [reservations, setReservations] = useState<Reservation[]>(() => {
+    // Synchronous immediate initial load from localStorage backup to prevent any blank state on refresh
+    const localBackup = localStorage.getItem('office_hub_reservations_v1');
+    return localBackup ? JSON.parse(localBackup) : [];
+  });
 
   useEffect(() => {
+    console.log("Subscribing to reservations in App.tsx...");
     const unsubscribe = subscribeReservations((updatedList) => {
+      console.log("Reservations updated from Firebase:", updatedList);
       setReservations(updatedList);
+      // Update local dual backup
+      localStorage.setItem('office_hub_reservations_v1', JSON.stringify(updatedList));
     }, (error) => {
       console.error("Failed to subscribe reservations:", error);
     });
@@ -147,7 +155,9 @@ export default function App() {
     // Optimistic local state update
     setReservations(prev => {
       if (prev.some(r => r.id === newBooking.id)) return prev;
-      return [newBooking, ...prev];
+      const updated = [newBooking, ...prev];
+      localStorage.setItem('office_hub_reservations_v1', JSON.stringify(updated));
+      return updated;
     });
     setLastReservation({
       ...newBooking,
@@ -160,7 +170,11 @@ export default function App() {
     createReservation(newBooking).catch((e) => {
       console.error('Failed to create reservation in Firestore:', e);
       // Rollback local state on error
-      setReservations(prev => prev.filter(r => r.id !== newBooking.id));
+      setReservations(prev => {
+        const rolledBack = prev.filter(r => r.id !== newBooking.id);
+        localStorage.setItem('office_hub_reservations_v1', JSON.stringify(rolledBack));
+        return rolledBack;
+      });
     });
   };
 
@@ -173,7 +187,11 @@ export default function App() {
   const handleConfirmReturn = (reservationId: string, notes: string) => {
     const resolvedNotes = notes || '특이사항 없음';
     // Optimistic local state update
-    setReservations(prev => prev.map(r => r.id === reservationId ? { ...r, status: 'completed', notes: resolvedNotes } : r));
+    setReservations(prev => {
+      const updated = prev.map(r => r.id === reservationId ? { ...r, status: 'completed', notes: resolvedNotes } : r);
+      localStorage.setItem('office_hub_reservations_v1', JSON.stringify(updated));
+      return updated;
+    });
     alert('반납 처리가 완료되었습니다. 감사합니다!');
     setActiveReturnId(null);
     setCurrentView('my_reservations');
@@ -195,7 +213,11 @@ export default function App() {
     updatedData: { date: string; startTime: string; endTime: string }
   ) => {
     // Optimistic local state update
-    setReservations(prev => prev.map(r => r.id === reservationId ? { ...r, ...updatedData } : r));
+    setReservations(prev => {
+      const updated = prev.map(r => r.id === reservationId ? { ...r, ...updatedData } : r);
+      localStorage.setItem('office_hub_reservations_v1', JSON.stringify(updated));
+      return updated;
+    });
     alert('예약 일정이 수정 완료되었습니다!');
     setActiveEditId(null);
     setCurrentView('my_reservations');
@@ -209,7 +231,11 @@ export default function App() {
   // Cancel reservation
   const handleCancelBooking = (reservationId: string) => {
     // Optimistic local state update
-    setReservations(prev => prev.map(r => r.id === reservationId ? { ...r, status: 'cancelled' } : r));
+    setReservations(prev => {
+      const updated = prev.map(r => r.id === reservationId ? { ...r, status: 'cancelled' } : r);
+      localStorage.setItem('office_hub_reservations_v1', JSON.stringify(updated));
+      return updated;
+    });
 
     // Perform database update in the background
     updateReservationStatus(reservationId, 'cancelled').catch((e) => {
@@ -292,7 +318,11 @@ export default function App() {
             onInitiateReturn={handleInitiateReturn}
              onInitiateInstantCheckout={(id) => {
                // Optimistic local state update
-               setReservations(prev => prev.map(r => r.id === id ? { ...r, status: 'in_use' } : r));
+               setReservations(prev => {
+                 const updated = prev.map(r => r.id === id ? { ...r, status: 'in_use' } : r);
+                 localStorage.setItem('office_hub_reservations_v1', JSON.stringify(updated));
+                 return updated;
+               });
                alert('자산 조기 체크아웃 및 사용 개시 처리가 완료되었습니다!');
 
                // Perform database update in the background
