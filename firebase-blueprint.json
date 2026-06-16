@@ -1,0 +1,60 @@
+{
+  "entities": {
+    "Reservation": {
+      "title": "Reservation",
+      "description": "An asset or room reservation",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the reservation"
+        },
+        "resourceId": {
+          "type": "string",
+          "description": "Identifier of the resource/asset reserved"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "Date of reservation (YYYY-MM-DD)"
+        },
+        "startTime": {
+          "type": "string",
+          "description": "Start time (HH:MM)"
+        },
+        "endTime": {
+          "type": "string",
+          "description": "End time (HH:MM)"
+        },
+        "purpose": {
+          "type": "string",
+          "description": "Purpose of reservation"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "confirmed", "in_use", "completed", "cancelled"],
+          "description": "Current status of the reservation"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Additional notes or return comments"
+        },
+        "attendees": {
+          "type": "integer",
+          "description": "Number of expected attendees"
+        },
+        "createdAt": {
+          "type": "object",
+          "description": "Server timestamp of reservation creation"
+        }
+      },
+      "required": ["id", "resourceId", "date", "startTime", "endTime", "purpose", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "reservations/{reservationId}": {
+      "schema": "Reservation",
+      "description": "Collection of asset and room reservations"
+    }
+  }
+}

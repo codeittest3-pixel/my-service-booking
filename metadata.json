@@ -1,0 +1,8 @@
+{
+  "name": "회의실·비품 예약 서비스",
+  "description": "",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
